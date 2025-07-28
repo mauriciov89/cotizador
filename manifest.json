@@ -1,0 +1,17 @@
+{
+  "name": "Cotizador Autmotor - Grupo Mauricio",
+  "short_name": "Cotizador-Automotor",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "img/icono.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+  "orientation": "portrait",
+  "categories": ["business"]
+}

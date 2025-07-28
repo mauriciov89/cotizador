@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cotizador de Seguro de Auto</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+      min-height: 100vh;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+      color: white;
+      padding: 25px 20px;
+      text-align: center;
+      border-bottom: 4px solid #ffeb3b;
+    }
+    
+    .header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    
+    .header p {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .content {
+      padding: 25px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #0d47a1;
+      font-size: 0.95rem;
+    }
+    
+    .input-wrapper {
+      position: relative;
+    }
+    
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e3f2fd;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f5f9ff;
+      color: #333;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #0d47a1;
+      box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.2);
+      background: white;
+    }
+    
+    .currency-selector {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    
+    .currency-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e3f2fd;
+      border-radius: 10px;
+      background: #f5f9ff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      color: #0d47a1;
+    }
+    
+    .currency-btn.active {
+      background: #0d47a1;
+      color: white;
+      border-color: #0d47a1;
+    }
+    
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 5px;
+    }
+    
+    .radio-option {
+      flex: 1;
+      min-width: 120px;
+      padding: 12px;
+      border: 2px solid #e3f2fd;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #f5f9ff;
+      font-size: 0.9rem;
+      color: #0d47a1;
+    }
+    
+    .radio-option:hover {
+      border-color: #0d47a1;
+      background: #e3f2fd;
+    }
+    
+    .radio-option.selected {
+      background: #0d47a1;
+      color: white;
+      border-color: #0d47a1;
+    }
+    
+    .section-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .section {
+      flex: 1;
+    }
+    
+    .calculate-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #ffeb3b 0%, #ffc107 100%);
+      color: #0d47a1;
+      padding: 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 235, 59, 0.4);
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .calculate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 235, 59, 0.6);
+    }
+    
+    .calculate-btn:active {
+      transform: translateY(0);
+    }
+    
+    .resultado {
+      background: #f5f9ff;
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #e3f2fd;
+      position: relative;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .resultado-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #0d47a1;
+    }
+    
+    .resultado h2 {
+      font-size: 1.3rem;
+      color: #0d47a1;
+      font-weight: 700;
+    }
+    
+    .copy-btn {
+      background: #0d47a1;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      font-weight: 600;
+    }
+    
+    .copy-btn:hover {
+      background: #1565c0;
+      transform: scale(1.05);
+    }
+    
+    .resultado-content {
+      line-height: 1.4;
+    }
+    
+    .resultado-item {
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 6px;
+      border-left: 3px solid #0d47a1;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .resultado-item.strong {
+      background: #e3f2fd;
+      border-left: 3px solid #ffeb3b;
+      font-weight: bold;
+    }
+    
+    .resultado-item strong {
+      color: #0d47a1;
+      display: inline;
+      margin-right: 8px;
+      font-size: 0.95rem;
+    }
+    
+    .resultado-item span {
+      color: #333;
+      font-size: 0.95rem;
+    }
+    
+    .error {
+      background: #ffebee;
+      color: #c62828;
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 4px solid #c62828;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+    
+    .success-message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4caf50;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .success-message.show {
+      opacity: 1;
+    }
+    
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    
+    .whatsapp-btn {
+      width: 100%;
+      background: #25D366;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .whatsapp-btn:hover {
+      background: #128C7E;
+      transform: translateY(-2px);
+    }
+    
+    @media (max-width: 480px) {
+      .section-group {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header {
+        padding: 20px 15px;
+      }
+      
+      .content {
+        padding: 20px 15px;
+      }
+      
+      .radio-option {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1><i class="fas fa-car"></i> Cotizador de Seguro</h1>
+      <p>Grupo : Mauricio </p>
+    </div>
+    
+    <div class="content">
+      <div class="form-group">
+        <label for="marca">Marca del vehículo</label>
+        <div class="input-wrapper">
+          <input type="text" id="marca" placeholder="Ej. Toyota Rav4, Nissan March...">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="valor">Valor comercial</label>
+        <div class="input-wrapper">
+          <input type="number" id="valor" placeholder="Ej. usd 25,000 ó bs 175,000...">
+        </div>
+        <div class="currency-selector">
+          <button class="currency-btn active" data-value="usd">USD ($)</button>
+          <button class="currency-btn" data-value="bs">Bolivianos (Bs)</button>
+        </div>
+      </div>
+      
+      <div class="section-group">
+        <div class="section">
+          <label>¿Es de origen chino?</label>
+          <div class="radio-group">
+            <div class="radio-option selected" data-name="chino" data-value="no">No</div>
+            <div class="radio-option" data-name="chino" data-value="si">Sí</div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <label>Producto</label>
+          <div class="product-grid">
+            <div class="radio-option selected" data-name="producto" data-value="autotal">Autotal</div>
+            <div class="radio-option" data-name="producto" data-value="vagoneta">Vagoneta</div>
+            <div class="radio-option" data-name="producto" data-value="autotal500">Autotal 500</div>
+            <div class="radio-option" data-name="producto" data-value="pesado">A. Pesado</div>
+          </div>
+        </div>
+      </div>
+      
+      <button class="calculate-btn" onclick="calcular()">
+        <i class="fas fa-calculator"></i> Calcular Cotización
+      </button>
+      
+      <div class="resultado" id="resultado" style="display: none;"></div>
+    </div>
+  </div>
+  
+  <div class="success-message" id="successMessage">
+    <i class="fas fa-check-circle"></i> ¡Cotización copiada al portapapeles!
+  </div>
+
+  <script>
+    // Manejo de selección de moneda
+    document.querySelectorAll('.currency-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    
+    // Manejo de selección de radio buttons
+    document.querySelectorAll('.radio-option').forEach(option => {
+      option.addEventListener('click', function() {
+        const name = this.getAttribute('data-name');
+        document.querySelectorAll(`.radio-option[data-name="${name}"]`).forEach(opt => {
+          opt.classList.remove('selected');
+        });
+        this.classList.add('selected');
+      });
+    });
+    
+    function formatoMiles(n) {
+      return n.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',');
+    }
+    
+    function obtenerNombreProducto(valor) {
+      switch (valor) {
+        case "autotal": return "Autotal";
+        case "vagoneta": return "Vagoneta Segura";
+        case "autotal500": return "Autotal 500";
+        case "pesado": return "A. Pesado";
+        default: return "";
+      }
+    }
+    
+    function copiarTexto(texto) {
+      navigator.clipboard.writeText(texto).then(() => {
+        const message = document.getElementById('successMessage');
+        message.classList.add('show');
+        setTimeout(() => {
+          message.classList.remove('show');
+        }, 2000);
+      }).catch(err => {
+        alert("No se pudo copiar el texto");
+      });
+    }
+    
+    function compartirWhatsApp(texto) {
+      const textoCodificado = encodeURIComponent(texto);
+      window.open(`https://wa.me/?text=${textoCodificado}`, '_blank');
+    }
+    
+    function calcular() {
+      const marca = document.getElementById("marca").value.trim();
+      const valorInput = document.getElementById("valor").value;
+      const moneda = document.querySelector('.currency-btn.active').getAttribute('data-value');
+      const esChino = document.querySelector('.radio-option[data-name="chino"].selected').getAttribute('data-value');
+      const producto = document.querySelector('.radio-option[data-name="producto"].selected').getAttribute('data-value');
+      const resultadoDiv = document.getElementById("resultado");
+      
+      if (!marca || !valorInput) {
+        resultadoDiv.innerHTML = `<div class="error"><i class="fas fa-exclamation-circle"></i> ERROR: Por favor complete todos los campos</div>`;
+        resultadoDiv.style.display = 'block';
+        return;
+      }
+      
+      let valor = parseFloat(valorInput);
+      if (moneda === 'usd') valor *= 7;
+      const valorBs = valor;
+      const valorUSD = valorBs / 7;
+      
+      let tasa = 0.032;
+      if (producto === 'vagoneta') tasa = 0.034;
+      else if (producto === 'autotal500') tasa = 0.025;
+      else if (producto === 'pesado') tasa = 0.035;
+      
+      let primaContado = valorBs * tasa;
+      if (esChino === 'si') primaContado *= 1.10;
+      if (primaContado < 4200) primaContado = esChino === 'si' ? 4620 : 4200;
+      
+      const primaCredito = primaContado * 1.10;
+      let cuotaInicial = primaCredito * 0.30;
+      let saldo = primaCredito - cuotaInicial;
+      let cuota = Math.floor((saldo / 6) / 5) * 5;
+      cuotaInicial = primaCredito - (cuota * 6);
+      
+      const textoResultado =
+` *COTIZACION DE SEGURO*
+*Producto:* ${obtenerNombreProducto(producto)}
+*Vehículo:* ${marca}
+*Valor comercial:* Bs ${formatoMiles(valorBs)} (${formatoMiles(valorUSD)} USD)
+
+ *PRIMA* 
+*Contado:* Bs ${formatoMiles(primaContado)}
+*Crédito:* Bs ${formatoMiles(primaCredito)}
+*Cuota inicial:* Bs ${formatoMiles(cuotaInicial)}
+*6 cuotas de:* Bs ${formatoMiles(cuota)}
+
+Nacional Seguros - Bolivia`;
+      
+      resultadoDiv.innerHTML = `
+        <div class="resultado-header">
+          <h2><i class="fas fa-file-invoice"></i> Cotización</h2>
+          <button class="copy-btn" onclick="copiarTexto(\`${textoResultado}\`)">
+            <i class="fas fa-copy"></i> Copiar
+          </button>
+        </div>
+        <div class="resultado-content">
+          <div class="resultado-item">
+            <strong>Producto:</strong> <span>${obtenerNombreProducto(producto)}</span>
+          </div>
+          <div class="resultado-item">
+            <strong>Vehículo:</strong> <span>${marca}</span>
+          </div>
+          <div class="resultado-item">
+            <strong>Valor comercial:</strong> <span>Bs ${formatoMiles(valorBs)} (${formatoMiles(valorUSD)} USD)</span>
+          </div>
+          <div class="resultado-item strong">
+            <strong>PRIMA</strong>
+          </div>
+          <div class="resultado-item">
+            <strong>Contado:</strong> <span>Bs ${formatoMiles(primaContado)}</span>
+          </div>
+          <div class="resultado-item">
+            <strong>Crédito:</strong> <span>Bs ${formatoMiles(primaCredito)}</span>
+          </div>
+          <div class="resultado-item">
+            <strong>Cuota inicial:</strong> <span>Bs ${formatoMiles(cuotaInicial)}</span>
+          </div>
+          <div class="resultado-item">
+            <strong>6 cuotas de:</strong> <span>Bs ${formatoMiles(cuota)}</span>
+          </div>
+        </div>
+        <button class="whatsapp-btn" onclick="compartirWhatsApp(\`${textoResultado}\`)">
+          <i class="fab fa-whatsapp"></i> Compartir por WhatsApp
+        </button>
+      `;
+      
+      resultadoDiv.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
